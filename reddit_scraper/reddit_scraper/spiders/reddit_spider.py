@@ -48,11 +48,9 @@ class RedditSpider(BaseSpider):
 	user_page_posts_depth = 250 # max number of posts to scrape from a user's page
 
 
-	#---[ INPUT/OUTPUT DATA ]---
-	datafile_directory = os.getcwd () + "/reddit_data/"
-	posts_filename = datafile_directory + "posts_"
-	comments_filename = datafile_directory + "comments_"
-	users_filename = datafile_directory + "users_" 
+	#---[ OUTPUT DIRECTORY ]----
+	output_directory = os.path.join (os.getcwd(), 'data')
+
 	scrape_user=None
 	scrape_subreddit=None
 	scrape_thread=None
@@ -74,8 +72,8 @@ class RedditSpider(BaseSpider):
 		elif self.scrape_subreddit:
 			return [Request (url="http://www.reddit.com/r/" + self.scrape_subreddit + "/", callback=self.parse_subreddit)]
 		elif self.scrape_thread:
-			return_request = Request (url="http://www.reddit.com/r/malefashionadvice/comments/" + self.scrape_thread + "/", callback=self.parse_thread,  meta={'all_comments':False})
-	
+			# return_request = Request (url="http://www.reddit.com/r/malefashionadvice/comments/" + self.scrape_thread + "/", callback=self.parse_thread,  meta={'all_comments':False})
+			pass
 		return [return_request]
 
 
@@ -84,37 +82,55 @@ class RedditSpider(BaseSpider):
 	all_posts = []  #all posts encountered
 
 
-
-	def test (self, response):
-		print "hello, world!"
-
-
 	# Function: constructor
 	# ---------------------
 	# opens the files that we will be writing to
 	# NOTE: currently it over-writes the file every time we open it; 
 	#		should this be fixed in the future?
-	def __init__ (self, user=None, subreddit=None, thread=None):
+	def __init__ (self, subreddit=None):
 
-		if user:
-			self.scrape_user = user
-			self.users_filename += user + "_user.txt"
-			self.posts_filename += user + "_user.txt"
-			self.comments_filename += user + "_user.txt"
-		elif subreddit:
-			self.scrape_subreddit = subreddit
-			self.users_filename += subreddit + "_subreddit.txt"
-			self.posts_filename += subreddit + "_subreddit.txt"
-			self.comments_filename += subreddit + "_subreddit.txt"
-		elif thread:
-			self.scrape_thread = thread
-			self.users_filename += thread + "_thread.txt"
-			self.posts_filename += thread + "_thread.txt"
-			self.comments_filename += thread  + "_thread.txt"
+		if not subreddit:
+			print "ERROR: specify a subreddit"
+			exit ()
+
+		self.scrape_subreddit = subreddit
+
+
+		#--- make the appropriate directories ----
+		directories = set([directory.lower() for directory in os.listdir (self.output_directory)])
+		if self.scrape_subreddit.lower() in directories:
+			print "ERROR: already parsed this subreddit. terminating."
+			exit ()
 		else:
-			self.users_filename += "generic.txt"
-			self.posts_filename += "generic.txt"
-			self.comments_filename += "generic.txt"
+			print "Haven't scraped this subreddit yet."
+			self.subreddit_directory = os.path.join (self.output_directory, self.scrape_subreddit.lower())
+			os.mkdir (self.subreddit_directory)
+			
+
+			self.posts_file 		= open (os.path.join(self.subreddit_directory, 'posts.obj'), 	'wb')
+			self.comments_file 	= open (os.path.join(self.subreddit_directory, 'comments.obj'), 'wb') 
+			self.users_file 		= open (os.path.join(self.subreddit_directory, 'users.obj'), 	'wb')
+
+
+		# if user:
+		# 	self.scrape_user = user
+		# 	self.users_filename += user + "_user.txt"
+		# 	self.posts_filename += user + "_user.txt"
+		# 	self.comments_filename += user + "_user.txt"
+		# elif subreddit:
+		# 	self.scrape_subreddit = subreddit
+		# 	self.users_filename += subreddit + "_subreddit.txt"
+		# 	self.posts_filename += subreddit + "_subreddit.txt"
+		# 	self.comments_filename += subreddit + "_subreddit.txt"
+		# elif thread:
+		# 	self.scrape_thread = thread
+		# 	self.users_filename += thread + "_thread.txt"
+		# 	self.posts_filename += thread + "_thread.txt"
+		# 	self.comments_filename += thread  + "_thread.txt"
+		# else:
+		# 	self.users_filename += "generic.txt"
+		# 	self.posts_filename += "generic.txt"
+		# 	self.comments_filename += "generic.txt"
 
 
 		# self.users_file = open(self.users_filename, "w")
@@ -129,13 +145,10 @@ class RedditSpider(BaseSpider):
 	# will dump all of the users/comments/posts appropriately
 	def __del__ (self):
 
-		posts_file 		= open ('posts.obj', 'wb')
-		comments_file 	= open ('comments.obj', 'wb') 
-		users_file 		= open ('users.obj', 'wb')
 
-		pickle.dump (self.posts, posts_file)
-		pickle.dump (self.comments, comments_file)
-		pickle.dump (self.users, users_file)
+		pickle.dump (self.posts, self.posts_file)
+		pickle.dump (self.comments, self.comments_file)
+		pickle.dump (self.users, self.users_file)
 
 		print "---> dumped successfully"
 
