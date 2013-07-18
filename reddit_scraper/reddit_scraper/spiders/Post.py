@@ -75,7 +75,7 @@ class Post:
 	# Function: get_dict_representation
 	# ---------------------------------
 	# this will return a dict representation of the post object
-	def get_dict_representation ():
+	def get_dict_rep ():
 		
 		dict_rep = {
 			'user': self.user,
