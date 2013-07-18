@@ -103,7 +103,7 @@ class Comment:
 		
 		dict_rep = {
 			'user': self.user,
-			'content': self.conent,
+			'content': self.content,
 			'subreddit': self.subreddit,
 			'id': self.my_id,
 			'parent_id': self.parent_id,
