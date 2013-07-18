@@ -72,7 +72,9 @@ class RedditSpider(BaseSpider):
 		if self.scrape_user:
 			return_request = Request (url="http://www.reddit.com/user/" + self.scrape_user + "/", callback=self.parse_user)
 		elif self.scrape_subreddit:
-			return Request (url="http://www.reddit.com/r/" + self.scrape_subreddit + "/", callback=self.parse_subreddit)
+			print "HERE"
+			print "url = " + "http://www.reddit.com/r/" + self.scrape_subreddit + "/"
+			return [Request (url="http://www.reddit.com/r/" + self.scrape_subreddit + "/", callback=self.test)]
 		elif self.scrape_thread:
 			return_request = Request (url="http://www.reddit.com/r/malefashionadvice/comments/" + self.scrape_thread + "/", callback=self.parse_thread,  meta={'all_comments':False})
 	
@@ -83,6 +85,10 @@ class RedditSpider(BaseSpider):
 	this_page_posts = [] #posts only on this page
 	all_posts = []  #all posts encountered
 
+
+
+	def test (self, response):
+		print "hello, world!"
 
 
 	# Function: constructor
