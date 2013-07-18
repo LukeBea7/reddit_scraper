@@ -112,8 +112,6 @@ class Comment:
 			'downvotes': self.downvotes,
 			'score': self.score,
 			'time': self.time,
-			'link_url': self.link_url,
-			'comments_url': self.comments_url
 		}
 		return dict_rep
 
