@@ -42,7 +42,7 @@ class User:
 	# Function: get_dict_representation
 	# ---------------------------------
 	# this will return a dict representation of the post object
-	def get_dict_rep ():
+	def get_dict_rep (self):
 		dict_rep = {
 			'name': self.name,
 			'link_karma': self.link_karma,
