@@ -113,9 +113,9 @@ class RedditSpider(BaseSpider):
 			self.comments_filename += "generic.txt"
 
 
-		self.users_file = open(self.users_filename, "w")
-		self.posts_file = open (self.posts_filename, "w")
-		self.comments_file = open (self.comments_filename, "w")
+		# self.users_file = open(self.users_filename, "w")
+		# self.posts_file = open (self.posts_filename, "w")
+		# self.comments_file = open (self.comments_filename, "w")
 
 
 	
