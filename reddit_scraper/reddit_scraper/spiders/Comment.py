@@ -57,9 +57,9 @@ class Comment:
 		self.div_selector = div_selector
 
 		# --- get sentiment ---
-		sa = sentiment (self.content)
-		self.polarity = sa[0]
-		self.subjectivity = sa[1]
+		# sa = sentiment (self.content)
+		# self.polarity = sa[0]
+		# self.subjectivity = sa[1]
 
 		# --- get mood, modality ---
 		# self.negated = negated (self.content)
